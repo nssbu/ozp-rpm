@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.vistronix.ozp</groupId>
+  <artifactId>ozp-rpm</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+	
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>rpm-maven-plugin</artifactId>
+        <version>2.1.5</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>generate-rpm</id>
+            <goals>
+              <goal>rpm</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <name>ozp</name>
+          <copyright>2017, Vistronix</copyright>
+          <distribution>el6</distribution>
+          <group>applications</group>
+          <packager>maven</packager>
+          <release>${env.BUILD_NUMBER}</release>
+          <prefix>/usr/local/ozp</prefix>
+          <defaultDirMode>750</defaultDirMode>
+          <defaultFileMode>640</defaultFileMode>
+          <defaultUsername>ozp</defaultUsername>
+          <defaultGroupname>ozp</defaultGroupname>
+          <defineStatements>
+              <defineStatement>__os_install_post %{nil}</defineStatement>
+              <defineStatement>_binaries_in_noarch_packages_terminate_build 0</defineStatement>
+          </defineStatements>
+          <mappings>
+            <mapping>
+              <directory>/usr/local/ozp/frontend</directory>
+              <sources>
+                <source>
+                  <location>sources/frontend</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>/usr/local/ozp/backend</directory>
+              <sources>
+                <source>
+                  <location>sources/backend</location>
+                </source>
+              </sources>
+            </mapping>
+          </mappings>
+          <prepareScriptlet>
+            <script>
+              echo "PRE"; \
+              pwd
+            </script>
+          </prepareScriptlet>
+          <installScriptlet>
+              <!-- Extract and remove tar files prior to RPM generation -->
+              <script>
+                #!/usr/bin/env bash
+                find .. -name '*.tar.gz' -print0 | xargs -0 -n1 -I '{}' sh -c 'dir=$(dirname {}); tar -xzvf {} -C "${dir}"; rm -rf {}; echo "extracted file => {}";'; \
+                rc=$?; \
+                if [ $rc -eq 0 ]; then \
+                  echo "$(date) --- Tar file extraction was successful. ---"; \
+                else \
+                  echo "$(date) %%%%% => ERROR: TAR FILE EXTRACTION --FAILED--. Return code is $rc. Ending process. %%%%%"; \
+                  exit $rc; \
+                fi
+              </script>
+          </installScriptlet>
+          <postinstallScriptlet>
+            <script>echo "POST"</script>
+          </postinstallScriptlet>
+          <cleanScriptlet>
+            <script>echo "CLEAN"</script>
+          </cleanScriptlet>
+		</configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
