@@ -34,5 +34,10 @@ pipeline {
                 archiveArtifacts artifacts: '**/*.rpm'
             }
         }
+        stage('Copy the OZP RPM to the Home Directory') {
+            steps {
+                sh 'cp /var/jenkins/workspace/ozp-rpm/target/rpm/ozp/RPMS/noarch/ozp-*.rpm ~'
+            }
+        }
     }
 }
