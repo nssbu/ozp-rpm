@@ -16,7 +16,7 @@ pipeline {
                   mkdir -p sources/backend
                   mkdir -p sources/frontend
                 '''
-                unarchive mapping: ['../ozp-backend/backendf.tar.gz': 'sources/backend/backend.tar.gz']
+                unarchive mapping: ['/var/jenkins/workspace/ozp-backend/backend.tar.gz': 'sources/backend/backend.tar.gz']
                 unarchive mapping: ['../ozp-center/center.tar.gz': 'sources/frontend/center.tar.gz']
                 unarchive mapping: ['../ozp-help/help.tar.gz': 'sources/frontend/help.tar.gz']
                 unarchive mapping: ['../ozp-hud/hud.tar.gz': 'sources/frontend/hud.tar.gz']
