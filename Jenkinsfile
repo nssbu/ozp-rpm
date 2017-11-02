@@ -3,6 +3,11 @@ pipeline {
         label 'KZ01_TI-141_OZP_CentOS'
     }
     stages {
+        stage('Clear the Workspace') {
+            steps {
+                sh 'rm -rf *'
+            }
+        }
         stage('Checkout Repo') {
             steps {
                 git url: 'http://github.com/mark-betters-ozp-forks/ozp-rpm.git', branch: 'master'
@@ -11,8 +16,6 @@ pipeline {
         stage('Unarchive OZP Tarballs') {
             steps {
                 sh '''
-                  rm *.tar.gz
-                  rm -rf sources
                   mkdir sources
                   mkdir -p sources/backend
                   mkdir -p sources/frontend
