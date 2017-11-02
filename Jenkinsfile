@@ -16,12 +16,12 @@ pipeline {
                   mkdir -p sources/backend
                   mkdir -p sources/frontend
                 '''
-                copyArtifacts projectName: 'ozp-backend', filter: 'backend.tar.gz'
-                copyArtifacts projectName: 'ozp-center', filter: 'center.tar.gz'
-                copyArtifacts projectName: 'ozp-help', filter: 'help.tar.gz'
-                copyArtifacts projectName: 'ozp-hud', filter: 'hud.tar.gz'
-                copyArtifacts projectName: 'ozp-iwc', filter: 'iwc.tar.gz'
-                copyArtifacts projectName: 'ozp-webtop', filter: 'webtop.tar.gz'
+                copyArtifacts projectName: 'ozp-backend', filter: 'backend.tar.gz', target: 'sources/backend'
+                copyArtifacts projectName: 'ozp-center', filter: 'center.tar.gz', target: 'sources/frontend'
+                copyArtifacts projectName: 'ozp-help', filter: 'help.tar.gz', target: 'sources/frontend'
+                copyArtifacts projectName: 'ozp-hud', filter: 'hud.tar.gz', target: 'sources/frontend'
+                copyArtifacts projectName: 'ozp-iwc', filter: 'iwc.tar.gz', target: 'sources/frontend'
+                copyArtifacts projectName: 'ozp-webtop', filter: 'webtop.tar.gz', target: 'sources/frontend'
             }
         }
         stage('Build the RPMs') {
