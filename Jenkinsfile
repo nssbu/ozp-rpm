@@ -11,6 +11,7 @@ pipeline {
         stage('Unarchive OZP Tarballs') {
             steps {
                 sh '''
+                  rm *.tar.gz
                   rm -rf sources
                   mkdir sources
                   mkdir -p sources/backend
