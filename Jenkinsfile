@@ -28,19 +28,23 @@ pipeline {
                 copyArtifacts projectName: 'ozp-webtop', filter: 'webtop.tar.gz', target: 'sources/frontend'
             }
         }
-        stage('Build the RPMs') {
+        stage('Build the RPM') {
             steps {
+                //TODO: Set the BUILD_NUMBER environment variable to a proper value before running the next line.
                 sh 'mvn rpm:rpm'
             }
         }
-        stage('Archive the RPMs') {
+        stage('Archive the RPM') {
             steps {
                 archiveArtifacts artifacts: '**/*.rpm'
             }
         }
-        stage('Copy the OZP RPM to the Home Directory') {
+        stage('Copy the RPM into the OZP Package in the Home Directory') {
             steps {
-                sh 'cp /var/jenkins/workspace/ozp-rpm/target/rpm/ozp/RPMS/noarch/ozp-*.rpm ~'
+                sh '''
+                  rm ~/ozppkg/ozp-*.rpm
+                  cp /var/jenkins/workspace/ozp-rpm/target/rpm/ozp/RPMS/noarch/ozp-*.rpm ~/ozppkg
+                '''
             }
         }
     }
